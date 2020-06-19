@@ -1,0 +1,458 @@
+<project name="LAS-FSP" default="buildAll">
+
+	<!-- this is the filename for the build properties -->
+	<property name="build.properties.filename" value="build.properties" />
+
+	<!-- #################################################################################################### -->
+
+	<!-- Initializes many ant properties based off the build properties file -->
+	<target name="_init" >
+
+		<!-- Make sure the build properties file exists -->
+		<available file="${build.properties.filename}" property="build.properties.file.exists" />
+		<fail unless="build.properties.file.exists" message="The ${build.properties.filename} does not exists.  Please create this file, the easiest way is likely to copy/rename the ${build.properties.filename}.default file then edit the values inside." />
+
+		<!-- Load the build properties file -->
+		<echo>Loading custom build properties: ${build.properties.filename}</echo>
+		<loadproperties srcFile="${build.properties.filename}"/>
+
+		<!-- project: Common -->
+		<property name="Common.src.path" value="${Common.project.path}/src" />
+
+		<!-- project: Web -->
+		<property name="Web.src.path" value="${Web.project.path}/src" />
+		<property name="log4j.properties.tomcat.path" value="log4j.properties.tomcat" />
+		<property name="Web.ThemeTemplate.html.path" value="${Web.project.path}/WebContent/theme/theme.html" />
+		
+		<!-- project: API -->
+		<property name="API.src.path" value="${API.project.path}/src" />
+
+		<!-- project: Runtime -->
+		<property name="Runtime.src.path" value="${Runtime.project.path}/src" />
+
+		<!-- 3rd party jar paths -->
+		<property name="log4j.jar.path" value="${Common.project.path}/lib/${log4j.jar.filename}" />
+		<property name="json.jar.path" value="${Common.project.path}/lib/${json.jar.filename}" />
+		<property name="mysql.jar.path" value="${Common.project.path}/lib/${mysql.jar.filename}" />
+
+		<!-- which external libraries needed to compile the web project -->
+		<path id="Web.compile.classpath">
+			<pathelement location="${log4j.jar.path}" />
+			<pathelement location="${json.jar.path}" />
+
+			<!-- for taglib and servlets -->
+			<pathelement location="${tomcat.install.path}/lib/servlet-api.jar" />
+			<pathelement location="${tomcat.install.path}/lib/jsp-api.jar" />
+		</path>
+
+		<!-- which external libraries needed to compile the API project -->
+		<path id="API.compile.classpath">
+		</path>
+
+		<!-- which external libraries needed to compile the Runtime project -->
+		<path id="Runtime.compile.classpath">
+		</path>
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="clean" depends="_init,_initTomcatTasks" description="Cleans anything created or modified by the build process">
+
+		<delete dir="${build.dir}" />
+		<delete dir="${output.dir}" />
+		
+		<undeploy url="http://localhost:${tomcat.port}/manager/text" username="${tomcat.username}" password="${tomcat.password}" path="${tomcat.deploy.path}" failonerror="false" />
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="buildAll" depends="buildWeb" description="Builds all outputs" />
+
+	<target name="deployAll" depends="deployWeb" description="Deploys all outputs" />
+
+	<!-- #################################################################################################### -->
+
+	<target name="buildWeb" depends="_init,_setupbuildtime,_getSvnRevision,compileWeb,buildAPI,buildRuntime" description="Builds the output WAR file for the Web project">
+
+		<property name="Web.war.path" value="${output.dir}/${Web.war.filename}" />
+
+		<!-- create the output directory -->
+		<mkdir dir="${output.dir}" />
+
+		<!-- update the theme with the SVN revision -->
+		<replaceregexp match="&gt;[\s\w\.]+ [\w\s\.]+ \(SVN revision [\w\.:]+\)&lt;" replace="&gt;${explorer.app.name} ${version} (SVN revision ${svnrev})&lt;" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="index.jsp"/>
+				<include name="explorer.jsp"/>
+			</fileset>
+		</replaceregexp>
+		<replaceregexp match="&gt;[\s\w\.]+ [\w\s\.]+ \(SVN revision [\w\.:]+\)&lt;" replace="&gt;${crowd.app.name} ${version} (SVN revision ${svnrev})&lt;" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="crowd-admin.jsp"/>
+			</fileset>
+		</replaceregexp>
+
+		<!-- update the theme with the app name and version -->
+		<replaceregexp match="&lt;title&gt;.*?&lt;/title&gt;" replace="&lt;title&gt;${explorer.app.name} ${version}&lt;/title&gt;" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="index.jsp"/>
+				<include name="explorer.jsp"/>
+			</fileset>
+		</replaceregexp>
+		<replaceregexp match="&lt;title&gt;.*?&lt;/title&gt;" replace="&lt;title&gt;${crowd.app.name} ${version}&lt;/title&gt;" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="crowd-admin.jsp"/>
+			</fileset>
+		</replaceregexp>
+
+		<!-- update the build time comment -->
+		<replaceregexp match="Built on:( +)build.time" replace="Built on:\1${buildtime}" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="*.jsp"/>
+			</fileset>
+		</replaceregexp>
+		
+		<!-- update the svn revision comment -->
+		<replaceregexp match="SVN revision:( +)svn.revision" replace="SVN revision:\1${svnrev}" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="*.jsp"/>
+			</fileset>
+		</replaceregexp>
+
+		<!-- update the context file -->
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)path=&quot;.*?&quot;" replace="\1path=&quot;${tomcat.deploy.path}&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)docBase=&quot;.*?&quot;" replace="\1docBase=&quot;${general.app.name}&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)name=&quot;.*&quot;" replace="\1name=&quot;${jndi.name}&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)username=&quot;.*&quot;" replace="\1username=&quot;${mysql.username}&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)password=&quot;.*&quot;" replace="\1password=&quot;${mysql.password}&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)url=&quot;.*&quot;" replace="\1url=&quot;jdbc:mysql://${mysql.host}:${mysql.port}/${mysql.database}&quot;" byline="true" />
+		
+		<!-- copy the log4j properties file into the WEB-INF/classes folder and update for Tomcat log location -->
+		<copy file="${log4j.properties.tomcat.path}" tofile="${build.dir}/log4j.properties" />
+<!--
+		<replaceregexp
+			file="${build.dir}/log4j.properties"
+			match="log4j.appender.root.File=.*"
+			replace="log4j.appender.root.File=${catalina.base}/logs/FSP.log"
+			byline="true"
+			/>
+-->
+		<!-- generate the WAR file -->
+		<war destfile="${Web.war.path}" duplicate="fail" webxml="${Web.project.path}/WebContent/WEB-INF/web.xml">
+			<manifest>
+				<attribute name="Sealed" value="true" />
+				<attribute name="Built-On" value="${buildtime}" />
+				<attribute name="Created-By" value="${general.app.name} development team" />
+				<attribute name="SVN-Revision" value="${svnrev}" />
+				<attribute name="Build-Version" value="${version}" />
+				<attribute name="Class-Path" value="" />
+			</manifest>
+
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="**/*.jsp" />
+
+				<!-- add all of the javascript, css and image files -->
+				<include name="js/**/*.js" />
+				<include name="css/**/*.css" />
+				<include name="img/**/*.png" />
+
+				<include name="theme/navigation.xml" />
+				<include name="theme/theme.html" />
+				<include name="META-INF/context.xml" />
+				<include name="WEB-INF/tld/*.tld" />
+
+			</fileset>
+
+			<classes dir="${build.dir}">
+<!--
+				<patternset refid="FSP.classes.patternset" />
+-->
+			</classes>
+
+			<lib dir="${Common.project.path}/lib">
+<!--
+				<patternset refid="Test.libraries" />
+-->
+			</lib>
+			
+			<lib dir="${output.dir}">
+				<include name="${API.jar.filename}" />
+				<include name="${Runtime.jar.filename}" />
+			</lib>
+
+		</war>
+
+		<!-- undo the theme SVN revision changes -->
+		<replaceregexp match="&gt;[\s\w\.]+ [\w\s\.]+ \(SVN revision [\w\.:]+\)&lt;" replace="&gt;app.name app.version (SVN revision svn.revision)&lt;" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="*.jsp"/>
+			</fileset>
+		</replaceregexp>
+
+		<!-- undo the theme app name and version changes -->
+		<replaceregexp match="&lt;title&gt;.*?&lt;/title&gt;" replace="&lt;title&gt;app.name app.version&lt;/title&gt;" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="*.jsp"/>
+			</fileset>
+		</replaceregexp>
+		
+		<!-- undo the build time comment changes -->
+		<replaceregexp match="Built on:( +)[\d\s:\-]+" replace="Built on:\1build.time" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="*.jsp"/>
+			</fileset>
+		</replaceregexp>
+
+		<!-- undo the svn revision comment changes -->
+		<replaceregexp match="SVN revision:( +)[\d:M]+" replace="SVN revision:\1svn.revision" byline="true">
+			<fileset dir="${Web.project.path}/WebContent">
+				<include name="*.jsp"/>
+			</fileset>
+		</replaceregexp>
+
+		<!-- undo the context file changes -->
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)path=&quot;.*?&quot;" replace="\1path=&quot;...path...&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)docBase=&quot;.*?&quot;" replace="\1docBase=&quot;...docBase...&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)name=&quot;.*?&quot;" replace="\1name=&quot;...JNDI name...&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)username=&quot;.*?&quot;" replace="\1username=&quot;...username...&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)password=&quot;.*?&quot;" replace="\1password=&quot;...password...&quot;" byline="true" />
+		<replaceregexp file="${Web.project.path}/WebContent/META-INF/context.xml" match="(\s)url=&quot;.*?&quot;" replace="\1url=&quot;jdbc:mysql://...host...:...port.../...database name...&quot;" byline="true" />
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="deployWeb" depends="_init,buildWeb,_initTomcatTasks" description="Installs the WAR file on the Tomcat server">
+
+		<undeploy url="http://localhost:${tomcat.port}/manager/text" username="${tomcat.username}" password="${tomcat.password}" path="${tomcat.deploy.path}" failonerror="false" />
+
+		<deploy url="http://localhost:${tomcat.port}/manager/text" username="${tomcat.username}" password="${tomcat.password}" path="${tomcat.deploy.path}" war="file:${Web.war.path}" />
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="compileWeb" depends="_init,buildAPI,buildRuntime">
+
+		<!-- create the output dir -->
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+
+		<!-- update the main servlets with the JNDI name file -->
+		<replaceregexp file="${Web.project.path}/src/com/ara/fsp/FSPServletBase.java" match="JNDI_FSP(\s*)=(\s*)&quot;.*&quot;" replace="JNDI_FSP = &quot;java:comp/env/${jndi.name}&quot;" byline="true" />
+
+		<!-- actually compile the java source files -->
+		<javac destdir="${build.dir}" debug="true" target="1.8" includeAntRuntime="false">
+			<src path="${Common.src.path}" />
+			<src path="${Web.src.path}" />
+
+			<classpath refid="Web.compile.classpath" />
+			<classpath path="${API.jar.path}" />
+			<classpath path="${Runtime.jar.path}" />
+
+			<exclude name="**/test/**" />
+		</javac>
+
+		<!-- undo the main servlet changes -->
+		<replaceregexp file="${Web.project.path}/src/com/ara/fsp/FSPServletBase.java" match="JNDI_FSP(\s*)=(\s*)&quot;.*&quot;" replace="JNDI_FSP = &quot;...filled in by ant during build...&quot;" byline="true" />
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="compileAPI" depends="_init">
+
+		<!-- clean the output dir -->
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+
+		<!-- actually compile the java source files -->
+		<javac destdir="${build.dir}" debug="true" target="1.8" includeAntRuntime="false">
+			<src path="${API.src.path}" />
+			<classpath refid="API.compile.classpath" />
+			<exclude name="**/test/**" />
+		</javac>
+
+	</target>
+	
+	<!-- #################################################################################################### -->
+
+	<target name="buildAPI" depends="_init,compileAPI" description="Builds the output JAR file for the API project">
+	
+		<property name="API.jar.path" value="${output.dir}/${API.jar.filename}" />
+	
+		<!-- generate the JAR file -->
+		<jar destfile="${API.jar.path}" basedir="${build.dir}" />
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="compileRuntime" depends="_init,buildAPI">
+
+		<!-- create the output dir -->
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+
+		<!-- actually compile the java source files -->
+		<javac destdir="${build.dir}" debug="true" target="1.8" includeAntRuntime="false">
+			<src path="${Runtime.src.path}" />
+			<classpath path="${API.jar.path}" />
+		</javac>
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="buildRuntime" depends="_init,compileRuntime" description="Builds the output JAR file for the Runtime project">
+	
+		<property name="Runtime.jar.path" value="${output.dir}/${Runtime.jar.filename}" />
+	
+		<!-- generate the JAR file -->
+		<jar destfile="${Runtime.jar.path}" basedir="${build.dir}" />
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="dropDatabase" depends="_init" description="Drops the MySQL database">
+
+		<sql driver="com.mysql.jdbc.Driver" classpath="${mysql.jar.path}" url="jdbc:mysql://localhost:3306" userid="root" password="${mysql.rootpassword}">
+			GRANT USAGE ON ${mysql.database}.* TO ${mysql.username}@localhost;
+			DROP USER ${mysql.username}@localhost;
+			DROP DATABASE IF EXISTS ${mysql.database};
+		</sql>		
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<target name="installDatabase" depends="_init,dropDatabase" description="Installs the MySQL database">
+
+		<property name="sql.setup.path" value="${Data.project.path}/setup.sql" />
+		<property name="sql.create-tables.path" value="${Data.project.path}/create-tables.sql" />
+
+		<!-- update the setup.sql file -->
+		<replaceregexp match="^DROP DATABASE IF EXISTS \w+;$" replace="DROP DATABASE IF EXISTS ${mysql.database};" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match="^CREATE DATABASE \w+;$" replace="CREATE DATABASE ${mysql.database};" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match="\w*@localhost" replace="${mysql.username}@localhost" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match="IDENTIFIED BY '.*?'" replace="IDENTIFIED BY '${mysql.password}'" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match=" ON \w+\.\*" replace=" ON ${mysql.database}.*" byline="true" file="${sql.setup.path}" />
+
+		<!-- update the create-tables.sql file -->
+		<replaceregexp match="^USE \w+;$" replace="USE ${mysql.database};" byline="true" file="${sql.create-tables.path}" />
+
+		<!-- run the setup.sql -->
+		<sql
+			driver="com.mysql.jdbc.Driver"
+			classpath="${mysql.jar.path}"
+			url="jdbc:mysql://localhost:3306/"
+			userid="root"
+			password="${mysql.rootpassword}"
+			src="${sql.setup.path}"
+			/>
+
+		<!-- run the create-tables.sql -->
+		<sql
+			driver="com.mysql.jdbc.Driver"
+			classpath="${mysql.jar.path}"
+			url="jdbc:mysql://localhost:3306/${mysql.database}"
+			userid="root"
+			password="${mysql.rootpassword}"
+			src="${sql.create-tables.path}"
+			autocommit="true"
+			/>
+
+		<!-- revert the changes to the setup.sql file -->
+		<replaceregexp match="^DROP DATABASE IF EXISTS \w+;$" replace="DROP DATABASE IF EXISTS FSPDATABASE;" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match="^CREATE DATABASE \w+;$" replace="CREATE DATABASE FSPDATABASE;" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match="\w*@localhost" replace="FSPUSERNAME@localhost" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match="IDENTIFIED BY '.*?'" replace="IDENTIFIED BY 'FSPPASSWORD'" byline="true" file="${sql.setup.path}" />
+		<replaceregexp match=" ON \w+\.\*" replace=" ON FSPDATABASE.*" byline="true" file="${sql.setup.path}" />
+
+		<!-- revert the changes to the create-tables.sql file -->
+		<replaceregexp match="^USE \w+;$" replace="USE FSPDATABASE;" byline="true" file="${sql.create-tables.path}" />
+	</target>
+
+	<!-- #################################################################################################### -->
+	
+	<target name="runDBFramework" depends="_init,buildRuntime" description="Runs the DbFramework">
+	
+		<echo message="${Runtime.jar.path}" />
+		<java fork="true" failonerror="true" classname="las.fsp.araruntime.DbFramework">
+			<classpath>
+			   <pathelement location="${API.jar.path}" />
+			   <pathelement location="${Runtime.jar.path}" />
+			   <pathelement location="${mysql.jar.path}" />
+			</classpath>
+		</java>
+
+	</target>
+	
+	<!-- #################################################################################################### -->
+
+	<target name="_initTomcatTasks">
+	
+		<path id="tomcat.classpath">
+			<pathelement location="${tomcat.install.path}/lib/catalina-ant.jar" />
+			<pathelement location="${tomcat.install.path}/lib/tomcat-coyote.jar" />
+			<pathelement location="${tomcat.install.path}/lib/tomcat-util.jar" />
+		</path>
+
+		<!-- import tomcat tasks -->
+		<taskdef name="deploy"    classname="org.apache.catalina.ant.DeployTask" classpathref="tomcat.classpath" />
+		<taskdef name="undeploy"  classname="org.apache.catalina.ant.UndeployTask" classpathref="tomcat.classpath" />
+
+<!--
+		<taskdef name="start"     classname="org.apache.catalina.ant.StartTask" classpathref="tomcat.classpath" />
+		<taskdef name="stop"      classname="org.apache.catalina.ant.StopTask" classpathref="tomcat.classpath" />
+
+		<taskdef name="list"      classname="org.apache.catalina.ant.ListTask"/>
+		<taskdef name="reload"    classname="org.apache.catalina.ant.ReloadTask"/>
+		<taskdef name="resources" classname="org.apache.catalina.ant.ResourcesTask"/>
+		<taskdef name="roles"     classname="org.apache.catalina.ant.RolesTask"/>
+-->
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+	<!-- Sets up the build time -->
+	<target name="_setupbuildtime">
+
+		<!-- generate the current timestamp -->
+		<tstamp>
+			<format property="buildtime" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+
+		<echo>Build time: ${buildtime}</echo>
+
+	</target>
+
+	<!-- Gets the SVN repository head version and saves to svnrevision property -->
+	<target name="_getSvnRevision" unless="svnrev" depends="_init">
+
+		<property name="temp.filename" value="svnversion.txt" />
+
+		<!-- save the svn revision to a file -->
+		<exec executable="svnversion" spawn="false" output="${temp.filename}" />
+
+		<!-- now load the file contents back into a property -->
+		<loadfile srcFile="${temp.filename}" property="svnrev">
+			<filterchain>
+				<striplinebreaks/>
+			</filterchain>
+		</loadfile>
+
+		<!-- delete the file -->
+		<delete file="${temp.filename}" />
+
+		<echo>SVN revision: ${svnrev}</echo>
+
+	</target>
+
+	<!-- #################################################################################################### -->
+
+</project>

@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "explorer", "explorer", "{A0EC8FF3-C1FC-400C-BC2C-88E30561578C}"
+	ProjectSection(SolutionItems) = preProject
+		..\Web\WebContent\js\explorer-select-mission.js = ..\Web\WebContent\js\explorer-select-mission.js
+		..\Web\WebContent\js\explorer-startup.js = ..\Web\WebContent\js\explorer-startup.js
+		..\Web\WebContent\js\explorer.base.js = ..\Web\WebContent\js\explorer.base.js
+		..\Web\WebContent\js\explorer.conditionEvent.js = ..\Web\WebContent\js\explorer.conditionEvent.js
+		..\Web\WebContent\js\explorer.featuresPanel.js = ..\Web\WebContent\js\explorer.featuresPanel.js
+		..\Web\WebContent\js\explorer.mainCanvas.js = ..\Web\WebContent\js\explorer.mainCanvas.js
+		..\Web\WebContent\js\explorer.node.js = ..\Web\WebContent\js\explorer.node.js
+		..\Web\WebContent\js\explorer.previewCanvas.js = ..\Web\WebContent\js\explorer.previewCanvas.js
+		..\Web\WebContent\js\explorer.state.js = ..\Web\WebContent\js\explorer.state.js
+		..\Web\WebContent\js\explorer.statusWindow.js = ..\Web\WebContent\js\explorer.statusWindow.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{613F4D06-BBB3-4406-97B7-F7CA31633D41}"
+	ProjectSection(SolutionItems) = preProject
+		..\Web\WebContent\css\crowd.css = ..\Web\WebContent\css\crowd.css
+		..\Web\WebContent\css\explorer.css = ..\Web\WebContent\css\explorer.css
+		..\Web\WebContent\css\fsp.css = ..\Web\WebContent\css\fsp.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "crowd", "crowd", "{8C1CF0FA-A29E-45DE-BDD9-FCA54A895CE9}"
+	ProjectSection(SolutionItems) = preProject
+		..\Web\WebContent\js\crowd-admin.js = ..\Web\WebContent\js\crowd-admin.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{79F0C6EB-0056-4711-82E9-49BF0BB148A6}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A0EC8FF3-C1FC-400C-BC2C-88E30561578C} = {79F0C6EB-0056-4711-82E9-49BF0BB148A6}
+		{8C1CF0FA-A29E-45DE-BDD9-FCA54A895CE9} = {79F0C6EB-0056-4711-82E9-49BF0BB148A6}
+	EndGlobalSection
+EndGlobal

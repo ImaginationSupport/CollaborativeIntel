@@ -1,0 +1,171 @@
+/******************************************************************************************************************************************/
+
+#canvas-main
+{
+	display: none;
+}
+
+#features-panel
+{
+	display: none;
+	background-color: rgb(210,210,220);
+}
+
+#canvas-preview
+{
+	display: none;
+}
+
+#status-window
+{
+	display: none;
+	background-color: rgb(210,210,220);
+	background-image: url(../img/ARA-logo-white.png);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	background-position: calc(100% - 6px) calc(100% - 1.5em); 
+	padding: 4px;
+	font-family: "Lucida Console", "Courier New", monospace;
+	font-size: 80%;
+	overflow: auto;
+}
+
+.context-menu
+{
+	display: none;
+	position: fixed;
+	min-width: 250px;
+	margin: 0;
+	color: black;
+	background-color: white;
+	border: 1px solid black;
+}
+
+.context-menu-item
+{
+	cursor: pointer;
+	background-repeat: no-repeat;
+	background-position: 2px 4px;
+}
+
+.context-menu-item:hover
+{
+	background-color: rgb(210,210,210);
+}
+
+.context-menu-item hr
+{
+	margin: 0;
+}
+
+.context-menu-item-text
+{
+	padding: 4px 0;
+	display: inline-block;
+	margin: 2px 0 0 38px;
+	height: 22px;
+}
+
+.context-menu-item-disabled
+{
+	background-color: white !important;
+	color: rgb(160,160,160);
+	cursor: default;
+}
+
+/******************************************************************************************************************************************/
+
+#features-panel .message
+{
+	padding: 0.5rem;
+}
+
+#features-panel div.entity-container
+{
+	text-align: center;
+}
+
+#features-panel div.entity-container table
+{
+	width: 100%;
+}
+
+#features-panel div.entity-container td
+{
+	text-align: left;
+}
+
+#features-panel .featureTextEntry
+{
+	width: 100%;
+	padding: 1px;
+}
+
+#features-panel .featureIntegerEntry
+{
+	width: 80px;
+	padding: 1px;
+	text-align: right;
+}
+
+#features-panel .featureDecimalEntry
+{
+	width: 80px;
+	padding: 1px;
+	text-align: right;
+}
+
+#features-panel .featureDateTimeEntry
+{
+	width: 135px;
+	padding: 1px;
+}
+
+#features-panel .imageButton
+{
+	cursor: pointer;
+	height: 16px;
+	width: 16px;
+	margin: 2px 2px 0 0;
+}
+
+#features-panel button
+{
+	margin: 4px 4px 0 0;
+}
+
+/******************************************************************************************************************************************/
+
+.ui-accordion .ui-accordion-header
+{
+	background-color: #c00;
+	color: white;
+	font-weight: bold;
+	margin: 0;
+	outline: none;
+}
+
+h3.ui-accordion-header-active
+{
+	border: 0;
+	background-color: white;
+	color: black;
+	font-weight: bold;
+}
+
+.ui-accordion .ui-accordion-content
+{
+	background-color: rgb(210,210,220);
+	padding: 1em;
+}
+
+/******************************************************************************************************************************************/
+
+.ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
+
+.ui-icon { width: 16px; height: 16px; background-image: url(../img/third-party/ui-icons_eeeeee_256x240.png); }
+
+.ui-icon-triangle-1-e { background-position: -32px -16px; }
+.ui-icon-triangle-1-s { background-position: -64px -16px; }
+
+/******************************************************************************************************************************************/

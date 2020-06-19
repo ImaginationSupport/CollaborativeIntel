@@ -1,0 +1,49 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h4>Context</h4>
+        <p ng-bind-html="makeHTML(selectedQuestion.context)"></p>
+        <h4>Question</h4>
+        <p>
+            {{selectedQuestion.question}}
+        </p>
+        <p ng-show="selectedQuestion.details.explains.length > 0">
+            <div class="radio">
+                <label ng-repeat="explain in selectedQuestion.details.explains" style="display: block;">
+                    <input type="radio" ng-model="radioExplains.id" name='radioExplains' value="{{explain.id}}" ng-click="other(false)"> {{explain.eventlabel}}
+                    <ul>
+                        <li>If {{explain.option1}} then {{selectedQuestion.details.condition.option1}}</li>
+                        <li>If {{explain.option2}} then {{selectedQuestion.details.condition.option2}}</li>
+                    </ul>
+                </label>
+                <label style="display: block;">
+                    <input type="radio" ng-model="radioExplains.id" name='radioExplains' ng-click="other(true)" value="other"> Other, fill in the blanks below
+                </label>
+            </div>
+        </p>
+        <div ng-show="isOther">
+            <p>
+                {{selectedQuestion.details.condition.question}}
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-model="textAnswer">
+                </div>
+            </p>
+            <p>
+                <div class="form-inline">
+                    <strong>If</strong> <input type="text" class="form-control" ng-model="textOption1"/> <strong>then</strong> {{selectedQuestion.details.condition.option1}}
+                </div>
+            </p>
+            <p>
+                <div class="form-inline">
+                    <strong>If</strong> <input type="text" class="form-control" ng-model="textOption2"/> <strong>then</strong> {{selectedQuestion.details.condition.option2}}
+                </div>
+            </p>
+        </div>
+
+        <p style="height: 35px;">
+            <button class="btn btn-primary pull-right" ng-click="submitExplains(selectedQuestion)" ng-disabled="submitting">Submit</button>
+        </p>
+        <p>
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h4>Context</h4>
+        <p ng-bind-html="makeHTML(selectedQuestion.context)"></p>
+        <h4>Question</h4>
+        <p>
+            {{selectedQuestion.question}}
+        </p>
+        <p>
+            <div ng-class="{'input-group': selectedQuestion.units.length > 0, 'form-group': selectedQuestion.units.length == 0}">
+                <input type="text" class="form-control" placeholder="Answer" ng-model="textInput" aria-describedby="question-units">
+                <span class="input-group-addon" id="question-units" ng-show="selectedQuestion.units.length > 0">{{selectedQuestion.units}}</span>
+            </div>
+        </p>
+        <p>
+            Please indicate your confidence in this:
+        </p>
+        <p>
+            <div range-slider
+                 min="confidence.range.min"
+                 max="confidence.range.max"
+                 model-min="confidence.min"
+                 model-max="confidence.max"
+                 step="1"
+                 show-values="false"
+                 pin-handle="min"
+                 ng-style="{margin: '0px'}"></div>
+            <span>Low</span>
+            <span class="pull-right">High</span>
+        </p>
+        <p style="height: 35px;">
+            <button class="btn btn-primary pull-right" ng-click="submitInputs(selectedQuestion)" ng-disabled="submitting || textInput.length == 0">Submit</button>
+        </p>
+        <p>
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        </p>
+    </div>
+</div>

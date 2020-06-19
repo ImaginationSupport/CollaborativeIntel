@@ -1,0 +1,34 @@
+//	Copyright 2015 - Applied Research Associates, Inc. (All Rights Reserved)
+//	WARNING: this is a proof-of-concept demonstrator and not tested or warranted for production use
+//	For additional information please contact Chris Argenta - cargenta@ara.com
+
+package com.ara.fsp.runtime.mysql;
+
+import com.ara.fsp.api.FspFeatureId;
+
+public class FeatureId implements FspFeatureId {
+	public int value=-1;
+
+	@Override
+	public String getLabel() {
+		return "["+value+"]";
+	}
+	
+	@Override
+	public boolean equals(FspFeatureId other) {
+		if (other instanceof FeatureId)
+			if(((FeatureId)other).value==this.value) return true;
+		return false;
+	}
+	
+	public FeatureId(int value){
+		this.value=value;
+	}
+
+	@Override
+	public int hashCode() {
+		return value;
+	}
+	
+	
+}

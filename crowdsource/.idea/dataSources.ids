@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="Crowdsourcing" uuid="f6010838-99c6-4ca0-aa7f-797f7383d3e8">
+    <database-info product="MySQL" version="5.7.7-rc-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="crowdsourcing"/>
+    <table name="migrations" schema="" catalog="crowdsourcing" type="TABLE">
+      <column name="migration" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="batch" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+    </table>
+    <table name="password_resets" schema="" catalog="crowdsourcing" type="TABLE">
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <index name="password_resets_email_index" unique="false" columns="email"/>
+      <index name="password_resets_token_index" unique="false" columns="token"/>
+    </table>
+    <table name="users" schema="" catalog="crowdsourcing" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="60" scale="0" nullable="false" jdbcType="12"/>
+      <column name="remember_token" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <column name="updated_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="users_email_unique" unique="true" columns="email"/>
+    </table>
+  </data-source>
+  <data-source name="fsp" uuid="4feb174f-30a1-4680-bc9c-697479bdde92">
+    <database-info product="MySQL" version="5.7.7-rc-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="fsp"/>
+    <table name="ciconditions" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="questionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="question" sqlType="VARCHAR" precision="256" scale="0" nullable="false" jdbcType="12"/>
+      <column name="option1" sqlType="VARCHAR" precision="256" scale="0" nullable="false" jdbcType="12"/>
+      <column name="option2" sqlType="VARCHAR" precision="256" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="questionid" columns="questionid" ref-table="ciquestions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="questionid_idx" unique="false" columns="questionid"/>
+    </table>
+    <table name="cicontextconditions" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="questionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="conditionoptionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="html" sqlType="VARCHAR" precision="512" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="ccco" columns="conditionoptionid" ref-table="conditionoptions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="qcc" columns="questionid" ref-table="ciquestions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <index name="ccco_idx" unique="false" columns="conditionoptionid"/>
+      <index name="questionid_idx" unique="false" columns="questionid"/>
+    </table>
+    <table name="cicontextfeatures" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="questionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="featureid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="html" sqlType="VARCHAR" precision="512" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="cff" columns="featureid" ref-table="features" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="qcf" columns="questionid" ref-table="ciquestions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <index name="cff_idx" unique="false" columns="featureid"/>
+      <index name="questionid_idx" unique="false" columns="questionid"/>
+    </table>
+    <table name="cicrowdexplains" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="questionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="eventlabel" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="eventdesc" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12"/>
+      <column name="option1" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="option2" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="votes" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="question" columns="questionid" ref-table="ciquestions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="question_idx" unique="false" columns="questionid"/>
+    </table>
+    <table name="cicrowdinput" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="questionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="site" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12" def="J1Rlc3RPbmx5Jw=="/>
+      <column name="user" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="value" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="confidence" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8" def="LTE="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="qci" columns="questionid" ref-table="ciquestions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <index name="questionid_idx" unique="false" columns="questionid"/>
+    </table>
+    <table name="ciquestions" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="questiontype" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="label" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12" def="J1Vua25vd24gUXVlc3Rpb24n"/>
+      <column name="context" sqlType="VARCHAR" precision="2048" scale="0" nullable="false" jdbcType="12"/>
+      <column name="question" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="units" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="active" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MQ=="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="questionid" table="ciconditions" schema="" catalog="fsp" columns="questionid"/>
+      <exported-key name="qcc" table="cicontextconditions" schema="" catalog="fsp" columns="questionid"/>
+      <exported-key name="qcf" table="cicontextfeatures" schema="" catalog="fsp" columns="questionid"/>
+      <exported-key name="question" table="cicrowdexplains" schema="" catalog="fsp" columns="questionid"/>
+      <exported-key name="qci" table="cicrowdinput" schema="" catalog="fsp" columns="questionid"/>
+      <exported-key name="qtf" table="citargetfeatures" schema="" catalog="fsp" columns="questionid"/>
+    </table>
+    <table name="citargetfeatures" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="questionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="featureid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="updated" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="qtf" columns="questionid" ref-table="ciquestions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <foreign-key name="tff" columns="featureid" ref-table="features" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="questionid_idx" unique="false" columns="questionid"/>
+      <index name="tff_idx" unique="false" columns="featureid"/>
+    </table>
+    <table name="conditionoptions" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="conditionid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="edgeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="p" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="conditionid" columns="conditionid" ref-table="conditions" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="edgeid" columns="edgeid" ref-table="edges" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="ccco" table="cicontextconditions" schema="" catalog="fsp" columns="conditionoptionid"/>
+      <index name="conditionid_idx" unique="false" columns="conditionid"/>
+      <index name="edgeid_idx" unique="false" columns="edgeid"/>
+    </table>
+    <table name="conditions" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="type" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="conditionid" table="conditionoptions" schema="" catalog="fsp" columns="conditionid"/>
+    </table>
+    <table name="edges" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="true" jdbcType="12"/>
+      <column name="p" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8" def="LTE="/>
+      <column name="prev" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="next" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="nextfm" columns="next" ref-table="states" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="prevfk" columns="prev" ref-table="states" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="edgeid" table="conditionoptions" schema="" catalog="fsp" columns="edgeid"/>
+      <index name="next_idx" unique="false" columns="next"/>
+      <index name="prev_idx" unique="false" columns="prev"/>
+    </table>
+    <table name="entities" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="typeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="type" columns="typeid" ref-table="entitytypes" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="entity" table="features" schema="" catalog="fsp" columns="entityid"/>
+      <index name="type_idx" unique="false" columns="typeid"/>
+    </table>
+    <table name="entitytypes" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="label" sqlType="VARCHAR" precision="45" scale="0" nullable="false" jdbcType="12" def="J3Vua25vd24gZW50aXR5IHR5cGUn"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="type" table="entities" schema="" catalog="fsp" columns="typeid"/>
+      <exported-key name="entitytypefk" table="featureslots" schema="" catalog="fsp" columns="entitytypeid"/>
+    </table>
+    <table name="featurecomments" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="featureid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="featureid" columns="featureid" ref-table="features" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="featureid_idx" unique="false" columns="featureid"/>
+    </table>
+    <table name="featuremaps" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="featuretypeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="units" sqlType="VARCHAR" precision="45" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="featuretype" columns="featuretypeid" ref-table="featuretypes" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="feature" table="features" schema="" catalog="fsp" columns="featuremapid"/>
+      <exported-key name="featurefk" table="featureslots" schema="" catalog="fsp" columns="featuremapid"/>
+      <exported-key name="featuremapid" table="projectorparameter" schema="" catalog="fsp" columns="featuremapid"/>
+      <index name="featuretype_idx" unique="false" columns="featuretypeid"/>
+    </table>
+    <table name="features" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="entityid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="featuremapid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="stateid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="value" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="confidence" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="entity" columns="entityid" ref-table="entities" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="feature" columns="featuremapid" ref-table="featuremaps" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="state" columns="stateid" ref-table="states" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="cff" table="cicontextfeatures" schema="" catalog="fsp" columns="featureid"/>
+      <exported-key name="tff" table="citargetfeatures" schema="" catalog="fsp" columns="featureid"/>
+      <exported-key name="featureid" table="featurecomments" schema="" catalog="fsp" columns="featureid"/>
+      <index name="entity_idx" unique="false" columns="entityid"/>
+      <index name="feature_idx" unique="false" columns="featuremapid"/>
+      <index name="state_idx" unique="false" columns="stateid"/>
+    </table>
+    <table name="featureslots" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="entitytypeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="featuremapid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="entitytypefk" columns="entitytypeid" ref-table="entitytypes" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="featurefk" columns="featuremapid" ref-table="featuremaps" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="entitytype_idx" unique="false" columns="entitytypeid"/>
+      <index name="feature_idx" unique="false" columns="featuremapid"/>
+    </table>
+    <table name="featuretypes" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="jar" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="class" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="featuretype" table="featuremaps" schema="" catalog="fsp" columns="featuretypeid"/>
+      <exported-key name="featuretypeid" table="projectorparameterslot" schema="" catalog="fsp" columns="featuretypeid"/>
+    </table>
+    <table name="migrations" schema="" catalog="fsp" type="TABLE">
+      <column name="migration" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="batch" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+    </table>
+    <table name="missions" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12"/>
+      <column name="root" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="horizon" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="rootstateid" columns="root" ref-table="states" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="rootstateid_idx" unique="false" columns="root"/>
+    </table>
+    <table name="password_resets" schema="" catalog="fsp" type="TABLE">
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="token" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <index name="password_resets_email_index" unique="false" columns="email"/>
+      <index name="password_resets_token_index" unique="false" columns="token"/>
+    </table>
+    <table name="projectorparameter" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="projectorid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="featuremapid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="featuremapid" columns="featuremapid" ref-table="featuremaps" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="projectorid" columns="projectorid" ref-table="projectors" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="featuremapid_idx" unique="false" columns="featuremapid"/>
+      <index name="projectorid_idx" unique="false" columns="projectorid"/>
+    </table>
+    <table name="projectorparameterslot" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="projectortypeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="featuretypeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="description" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="featuretypeid" columns="featuretypeid" ref-table="featuretypes" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="projectortypeid" columns="projectortypeid" ref-table="projectortypes" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="featuretypeid_idx" unique="false" columns="featuretypeid"/>
+      <index name="projectortypeid_idx" unique="false" columns="projectortypeid"/>
+    </table>
+    <table name="projectors" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="projectortypeid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="typeid" columns="projectortypeid" ref-table="projectortypes" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="projectorid" table="projectorparameter" schema="" catalog="fsp" columns="projectorid"/>
+      <index name="typeid_idx" unique="false" columns="projectortypeid"/>
+    </table>
+    <table name="projectortypes" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="jar" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="class" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="label" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="projectortypeid" table="projectorparameterslot" schema="" catalog="fsp" columns="projectortypeid"/>
+      <exported-key name="typeid" table="projectors" schema="" catalog="fsp" columns="projectortypeid"/>
+    </table>
+    <table name="statecomments" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="stateid" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="description" sqlType="VARCHAR" precision="512" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="stateid" columns="stateid" ref-table="states" ref-schema="" ref-catalog="fsp" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="stateid_idx" unique="false" columns="stateid"/>
+    </table>
+    <table name="states" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="start" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="end" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="p" sqlType="DOUBLE" precision="22" scale="0" nullable="false" jdbcType="8"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="nextfm" table="edges" schema="" catalog="fsp" columns="next"/>
+      <exported-key name="prevfk" table="edges" schema="" catalog="fsp" columns="prev"/>
+      <exported-key name="state" table="features" schema="" catalog="fsp" columns="stateid"/>
+      <exported-key name="rootstateid" table="missions" schema="" catalog="fsp" columns="root"/>
+      <exported-key name="stateid" table="statecomments" schema="" catalog="fsp" columns="stateid"/>
+      <index name="dates_idx" unique="false" columns="start,end"/>
+    </table>
+    <table name="users" schema="" catalog="fsp" type="TABLE">
+      <column name="id" sqlType="INT UNSIGNED" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password" sqlType="VARCHAR" precision="60" scale="0" nullable="false" jdbcType="12"/>
+      <column name="remember_token" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <column name="updated_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="users_email_unique" unique="true" columns="email"/>
+    </table>
+  </data-source>
+</component>

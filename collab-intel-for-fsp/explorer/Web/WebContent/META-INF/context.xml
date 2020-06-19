@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Context path="...path..." docBase="...docBase..." debug="5" reloadable="false" crossContext="true">
+
+	<Resource
+		name="...JNDI name..."
+		auth="Container"
+		type="javax.sql.DataSource"
+		maxActive="50"
+		maxIdle="20"
+		maxWait="5000"
+		username="...username..."
+		password="...password..."
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://...host...:...port.../...database name..."
+		removeAbandoned="true"
+		removeAbandonedTimeout="10"
+		logAbandoned="true"
+		
+		testWhileIdle="true"
+		testOnBorrow="true"
+		testOnReturn="false"
+		validationQuery="SELECT 1"
+		validationInterval="30000"
+		timeBetweenEvictionRunsMillis="5000"
+		minEvictableIdleTimeMillis="30000"
+		/>
+
+</Context>

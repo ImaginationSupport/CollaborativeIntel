@@ -1,0 +1,8 @@
+Add these lines to the end of your tomcat/conf/tomcat-users.xml file, then update the same username/password in the build.properties as the tomcat.username and tomcat.password:
+
+	<role rolename="admin-gui"/>
+	<role rolename="manager-gui"/>
+	<role rolename="manager-script"/>
+	<role rolename="manager"/>
+	<role rolename="admin"/>
+	<user username="matt" password="...password..." roles="admin,manager,manager-gui,admin-gui,manager-script"/>

@@ -1,0 +1,20 @@
+
+DELETE FROM ciconditions WHERE 1;
+DELETE FROM cicontextconditions WHERE 1;
+DELETE FROM cicontextfeatures WHERE 1;
+DELETE FROM cicrowdexplains WHERE 1;
+DELETE FROM cicrowdinput WHERE 1;
+DELETE FROM ciquestions WHERE 1;
+DELETE FROM features WHERE 1;
+DELETE FROM edges WHERE 1;
+DELETE FROM missions WHERE 1;
+DELETE FROM states WHERE 1;
+DELETE FROM conditionoptions WHERE 1;
+DELETE FROM conditions WHERE 1;
+DELETE FROM citargetfeatures WHERE 1;
+DELETE FROM entities WHERE 1;
+DELETE FROM featureslots WHERE 1;
+DELETE FROM featuremaps WHERE 1;
+DELETE FROM entitytypes WHERE 1;
+DELETE FROM features WHERE 1;
+DELETE FROM featuretypes WHERE 1;

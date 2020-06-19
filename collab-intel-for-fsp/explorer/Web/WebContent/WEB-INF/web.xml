@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	
+	<display-name>FSP Explorer</display-name>
+<!--
+	<servlet>
+		<description>Initializes anything the server needs</description>
+		<display-name>InitServlet</display-name>
+		<servlet-name>InitServlet</servlet-name>
+		<servlet-class>com.ara.fspexplorer.InitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+-->
+	<servlet>
+		<description>FSP Explorer servlet</description>
+		<display-name>FSP Explorer</display-name>
+		<servlet-name>FSPExplorerServlet</servlet-name>
+		<servlet-class>com.ara.fsp.explorer.FSPExplorerServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<description>FSP Crowd servlet</description>
+		<display-name>FSP Crowd</display-name>
+		<servlet-name>FSPCrowdServlet</servlet-name>
+		<servlet-class>com.ara.fsp.crowd.FSPCrowdServlet</servlet-class>
+	</servlet>
+<!--
+	<servlet-mapping>
+		<servlet-name>InitServlet</servlet-name>
+		<url-pattern>/init</url-pattern>
+	</servlet-mapping>
+-->
+	<servlet-mapping>
+		<servlet-name>FSPExplorerServlet</servlet-name>
+		<url-pattern>/explorer-backend</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>FSPCrowdServlet</servlet-name>
+		<url-pattern>/crowd-backend</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<resource-env-ref>
+		<description>JDBC datasource</description>
+		<resource-env-ref-name>jdbc/fspexplorer</resource-env-ref-name>
+		<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+	</resource-env-ref>
+</web-app>

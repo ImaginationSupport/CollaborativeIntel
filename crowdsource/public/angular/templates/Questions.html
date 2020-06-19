@@ -1,0 +1,21 @@
+<div class="col-xs-12">
+    <h4>Questions</h4>
+</div>
+<div class="col-sm-6">
+
+    <div class="list-group">
+        <a href="#" class="list-group-item"
+           ng-repeat="question in questions"
+           ng-click="selected(question)"
+           ng-class="{active: question.selected}">
+            <p class="list-group-item-text"
+               ng-class="{white: question.selected}">
+                {{question.label}}
+            </p>
+        </a>
+    </div>
+</div>
+<div class="col-sm-6">
+    <inputs ng-show="selectedQuestion.questiontype == 'FEATURE'"></inputs>
+    <explains ng-show="selectedQuestion.questiontype == 'CONDITION'"></explains>
+</div>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Crowdsourcing" uuid="f6010838-99c6-4ca0-aa7f-797f7383d3e8">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>crowdsourcing.*</schema-pattern>
+      <default-schemas>crowdsourcing.*</default-schemas>
+    </data-source>
+    <data-source name="fsp" uuid="4feb174f-30a1-4680-bc9c-697479bdde92">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>fsp.*</schema-pattern>
+      <default-schemas>fsp.*</default-schemas>
+    </data-source>
+  </component>
+</project>
